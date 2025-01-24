@@ -3,9 +3,11 @@ import { useAuth } from "../contexts/auth-context";
 import { LoginResponse, StatusType } from "../types/global";
 import { AxiosResponse } from "axios";
 import { login } from "../services/login";
+import { useNavigate } from "react-router-dom";
 
 export const useLogin = () => {
     const { setToken } = useAuth();
+    const navigate = useNavigate()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -17,6 +19,7 @@ export const useLogin = () => {
         e.preventDefault();
         login(email, password).then((res: AxiosResponse<LoginResponse>) => {
             setToken(res?.data?.token);
+            navigate("/dashboard")
         }).catch((err) => {
             const message = err?.message
             setMsg(message)

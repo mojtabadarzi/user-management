@@ -1,10 +1,16 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/auth-context";
 
 const Layout = ({ children, title, back, titleButton }: { children: ReactNode, title: string, back?: ReactNode, titleButton?: ReactNode }) => {
-    const { setToken } = useAuth();
+    const { token, setToken } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/');
+        }
+    }, [token, navigate]);
 
     const handleLogout = () => {
         setToken(null);
@@ -12,7 +18,7 @@ const Layout = ({ children, title, back, titleButton }: { children: ReactNode, t
     };
 
     return (
-        <section className="p-4 max-w-[1024px] mx-auto">
+        !token ? null : <section className="p-4 max-w-[1024px] mx-auto">
             <article className="flex justify-between w-full items-center">
                 {back}
                 <section className="flex gap-4 items-center">
